@@ -1,50 +1,27 @@
-import {useEffect } from "react";
-import Header from "./components/header/header";
-import Tabs from "./components/tabs/tabs";
-import Places from "./components/places/places";
-import Form from "./components/form/form";
-import { connect } from "react-redux";
-import { ActionCreator } from "./reducer";
-import {onGetRequest} from "./api/api";
+import React from 'react';
+import {BrowserRouter, Route, Routes, Link} from 'react-router-dom';
+import Main from './pages/Main';
+import Layout from './layouts/Layout';
+import Auth from './pages/Auth';
+import LayoutNoHeader from './layouts/LayoutNoHeader';
+import Favorites from './pages/Favorites';
+import Offer from './pages/Offer';
+import Error from './pages/Error';
 
-const App = ({getHotels}) => {
-  useEffect(() => {
-    onGetRequest().then((response) => getHotels(response))
-  }, [getHotels]);
-  
+function App() {
   return (
-    <>  
-      <Header/>
-      <main className="page__main page__main--index">
-        <h1 className="visually-hidden">Cities</h1>
-        <Tabs/>
-        <div className="cities__places-wrapper">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">312 places to stay in Amsterdam</b>
-              <Form/>
-              <Places/>
-            </section>
-            <div className="cities__right-section">
-              <section className="cities__map map" />
-            </div>
-          </div>
-        </div>
-      </main>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout children={<Main />} />} />
+        <Route path="/favorite" element={<Layout children={<Favorites />} />} />
+        <Route path="/auth" element={<LayoutNoHeader children={<Auth />} />} />
+        <Route path="/offer">
+          <Route path=":id" element={<Layout children={<Offer />} />} />
+        </Route>
+        <Route path="*" element={<Layout children={<Error />} />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-const mapStateToProps = (state) => ({
-  sortType: state.sortType,
-  list: state.list
-});
 
-const mapDispatchToProps = (dispatch) => ({
-  getHotels(hotels) {
-    dispatch(ActionCreator.getHotels(hotels))
-  },
-});
-
-export  { App };
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default App;

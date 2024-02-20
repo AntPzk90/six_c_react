@@ -1,54 +1,52 @@
-import axios from "axios";
+import axios from './axios';
 
-const api = axios.create({
-  baseURL: `https://7.react.pages.academy/six-cities`,
-  timeout: 1000 * 5,
-  withCredentials: true,
-});
+export const fetchHotels = (url) =>
+  axios.get(url).then((response) => {
+    return response.data;
+  });
 
-// const onSuccess = (response) => response;
-// const onFail = (err) => {
-//   if (err.response.status === 403) {
-//     console.log(`Обработал ошибку 403`);
-//     return { data: null };
-//   }
-//   return err;
-// };
+export const fetchOffer = (url) =>
+  axios.get(url).then((response) => {
+    return response.data;
+  });
 
-// api.interceptors.response.use(onSuccess, onFail);
+export const loginUser = (url, data) =>
+  axios
+    .post(url, data)
+    .then((response) => {
+      return response.data;
+    })
+    .then((response) => {
+      localStorage.setItem('user', JSON.stringify(response));
+    });
 
-export const onGetRequest = () => {
-  return api
-    .get(`/hotels`)
-    .then((res) => {
-      return res.data;
+export const checkLoginUser = (url) =>
+  axios
+    .get(url)
+    .then((response) => {
+      return response.data;
     })
     .catch((err) => {
-      console.log(err.response.data.error);
+      if (err.response.status === 401) localStorage.removeItem('user');
+      return err.response;
     });
-};
 
-// const onPostRequest = () => {
-//   return api
-//     .post(`/login`, {
-//       email: `test@test.com`,
-//       password: 1234,
-//     })
-//     .then((res) => {
-//       console.log(res.data);
-//     })
-//     .catch((err) => {
-//       console.log(err.response.data.error);
-//     });
-// };
+export const fetchFavoritesHotels = (url) =>
+  axios.get(url).then((response) => {
+    return response.data;
+  });
 
-// const onLogoutRequest = () => {
-//   return api
-//     .get(`/logout`)
-//     .then((res) => {
-//       console.log(res);
-//     })
-//     .catch((err) => {
-//       console.log(err.response.data.error);
-//     });
-// };
+export const changeHotelFavoriteStatus = (url) =>
+  axios.post(url).then((response) => {
+    return response.data;
+  });
+
+export const postReview = (url, data) =>
+  axios.post(url, data).then((response) => {
+    return response.data;
+  });
+
+export const fetchReviews = (url) =>
+  axios.get(url).then((response) => {
+    return response.data;
+  });
